@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sence — негазированная минеральная природная вода</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<!-- класс glass-on включает эффект «сквозь стекло». Уберите его, если нужен максимум FPS. -->
+<body class="glass-on">
+
+  <!-- Короткая заставка, пока грузятся кадры бутылки -->
+  <div class="preloader" id="preloader"><div class="bar"><i id="preloaderBar"></i></div></div>
+
+  <!-- ====================== ШАПКА (уезжает скроллом) ====================== -->
+  <header class="header">
+    <nav>
+      <a href="#">О нас</a>
+      <a href="#">Каталог</a>
+      <a href="#">Где купить</a>
+    </nav>
+    <nav>
+      <a href="#">Коллаборации</a>
+      <a href="#">Мерч</a>
+      <a href="#">Контакты</a>
+    </nav>
+  </header>
+
+  <!-- ============ СЦЕНА БУТЫЛКИ: всегда фиксирована по центру ============ -->
+  <!-- 120 кадров вращения создаёт script.js (см. buildFrames). В разметке их держать не нужно. -->
+  <div class="bottle-stage" id="bottleStage">
+    <div class="glass" id="glass"></div>
+    <!-- Все 120 кадров кладём в этот контейнер (его наполняет script.js).
+         У контейнера один общий GPU-слой — он лежит ПОВЕРХ «стекла»,
+         поэтому бутылка чёткая, а блюр остаётся за ней. -->
+    <div class="bottle-frames" id="bottleFrames"></div>
+  </div>
+
+  <main>
+
+    <!-- ============================== HERO ============================== -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-bg" id="heroBg">
+          <img class="hero-photo hero-photo--left"  src="assets/img/image_1.jpg" alt="" />
+          <img class="hero-photo hero-photo--right" src="assets/img/image_2.jpg" alt="" />
+
+          <!-- ПРАВЫЙ блок «лесенкой». Каждая строка позиционируется отдельно по макету.
+               Строка «минеральная» (r2) выровнена по верхней границе фото справа. -->
+          <p class="hero-line r1">негазированная</p>
+          <p class="hero-line r2">минеральная</p>
+          <p class="hero-line r3">природная</p>
+          <p class="hero-line r4">вода</p>
+
+          <!-- ЛЕВЫЙ блок «лесенкой» по макету -->
+          <p class="hero-line l1">для ценителей</p>
+          <p class="hero-line l2">вкуса</p>
+          <p class="hero-line l3">и свежих</p>
+          <p class="hero-line l4">ощущений</p>
+
+          <img class="hero-wordmark" src="assets/img/logo.png" alt="sence" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ЗОНА ВРАЩЕНИЯ + ПОЗИЦИОНИРОВАНИЕ ================ -->
+    <section class="rotate">
+      <div class="pos-text pos-text--a" id="posTextA">
+        <!-- ПРАВЫЙ блок: каждая строка со своим сдвигом (лесенка из макета), без флага -->
+        <div class="pt pt--right">
+          <span class="ln">Вода для урбанистов,</span>
+          <span class="ln">которые выбирают простые</span>
+          <span class="ln">и осмысленные вещи,</span>
+          <span class="ln">соответствующие</span>
+          <span class="ln">их лайфстайлу,</span>
+        </div>
+        <!-- ЛЕВЫЙ блок -->
+        <div class="pt pt--left">
+          <span class="ln">Зная, что всегда</span>
+          <span class="ln">получают</span>
+          <span class="ln">гарантированный</span>
+          <span class="ln">вкус и качество.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= СЛОГАН ============================= -->
+    <section class="slogan">
+      <div class="slogan-inner" id="sloganMid">
+      </div>
+    </section>
+
+    <!-- =========================== ПРЕИМУЩЕСТВА ========================= -->
+    <section class="benefits" id="benefits">
+      <!-- 01 — фото слева -->
+      <article class="benefit benefit--left">
+        <img class="benefit-photo p-portrait" src="assets/img/image_3.jpg" alt="" />
+        <div class="benefit-caption">
+          <span class="num">01</span>
+          <span class="txt"><span class="ln">Оптимальный</span><span class="ln">PH 7.64</span></span>
+        </div>
+      </article>
+      <!-- 02 — фото справа -->
+      <article class="benefit benefit--right">
+        <img class="benefit-photo p-portrait" src="assets/img/image_4.jpg" alt="" />
+        <div class="benefit-caption">
+          <span class="num">02</span>
+          <span class="txt"><span class="ln">Чистый</span><span class="ln">нейтральный вкус</span><span class="ln">без посторонних</span><span class="ln">оттенков</span></span>
+        </div>
+      </article>
+      <!-- 03 — фото слева -->
+      <article class="benefit benefit--left">
+        <img class="benefit-photo p-portrait" src="assets/img/image_2.jpg" alt="" />
+        <div class="benefit-caption">
+          <span class="num">03</span>
+          <span class="txt"><span class="ln">Умеренная</span><span class="ln">минерализация</span><span class="ln">без перегрузки</span><span class="ln">солями</span></span>
+        </div>
+      </article>
+      <!-- 04 — фото справа -->
+      <article class="benefit benefit--right">
+        <img class="benefit-photo p-portrait" src="assets/img/image_5.jpg" alt="" />
+        <div class="benefit-caption">
+          <span class="num">04</span>
+          <span class="txt"><span class="ln">Вода для того,</span><span class="ln">чтобы снова ощутить</span><span class="ln">вкус жизни</span></span>
+        </div>
+      </article>
+      <!-- 05 — фото слева -->
+      <article class="benefit benefit--left">
+        <img class="benefit-photo p-landscape" src="assets/img/image_6.jpg" alt="" />
+        <div class="benefit-caption">
+          <span class="num">05</span>
+          <span class="txt"><span class="ln">Выпить при</span><span class="ln">первых признаках</span><span class="ln">рутины</span></span>
+        </div>
+      </article>
+    </section>
+
+    <!-- ===================== РАСТВОРЕНИЕ БУТЫЛКИ ======================== -->
+    <section class="dissolve" id="dissolve"></section>
+
+    <!-- ============================= ФИНАЛ ============================= -->
+    <section class="finale">
+      <div class="finale-slogan">
+        <span class="row"><span class="b">Создать</span> <span class="t">свое</span> <span class="b">течение</span></span>
+        <span class="row"><span class="b">Способное</span> <span class="t">стать</span> <span class="b">своей</span></span>
+        <span class="row"><span class="t">супер</span> <span class="b">силой</span></span>
+      </div>
+
+      <div class="subscribe">
+        <div class="subscribe-row">
+          <input type="email" placeholder="example@mail.com" aria-label="email" />
+          <button type="button" aria-label="Подписаться">
+            <svg class="arrow-ic" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M11 19.15C10.5306 19.15 10.15 19.5306 10.15 20C10.15 20.4694 10.5306 20.85 11 20.85V20V19.15ZM27.601 20.601C27.933 20.2691 27.933 19.7309 27.601 19.399L22.1917 13.9896C21.8597 13.6576 21.3215 13.6576 20.9896 13.9896C20.6576 14.3215 20.6576 14.8597 20.9896 15.1917L25.7979 20L20.9896 24.8083C20.6576 25.1403 20.6576 25.6785 20.9896 26.0104C21.3215 26.3424 21.8597 26.3424 22.1917 26.0104L27.601 20.601ZM11 20V20.85H27V20V19.15H11V20Z" fill="#fff"/>
+            </svg>
+          </button>
+        </div>
+        <p class="subscribe-caption">Подпишись на рассылку, чтобы получать последние новости, обновления и эксклюзивные предложения.</p>
+      </div>
+
+      <img class="finale-wordmark" src="assets/img/logo.png" alt="sence" />
+
+      <div class="footer">
+        <div class="footer-grid">
+          <div class="footer-row">
+            <a href="#">О нас</a>
+            <a href="#">Каталог</a>
+            <a href="#">Контакты</a>
+            <a href="#">Где найти</a>
+            <a href="#">Коллаборации</a>
+            <a href="#">Мерч</a>
+          </div>
+          <div class="footer-row">
+            <span>© 2026 Все права защищены</span>
+            <a href="#">Политика конфиденциальности</a>
+            <a href="#">Лицензия</a>
+            <a href="#">Документы</a>
+            <a href="#">Для оптовых покупателей</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- GSAP + ScrollTrigger (локально, для офлайн-работы) -->
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

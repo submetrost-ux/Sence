@@ -1,0 +1,539 @@
+/* ============================================================================
+   SENCE — промо-лендинг. Стили.
+   Дизайн свёрстан в системе координат макета 1920×1080.
+   Масштаб задаётся ОДНОЙ переменной --u (никакого CSS zoom!):
+     --u = 1 «пиксель макета». По умолчанию привязан к ширине вьюпорта,
+     поэтому вся сцена пропорционально масштабируется под любой экран.
+     Чтобы перейти на фиксированные пиксели — поменяйте только --u на 1px.
+   ============================================================================ */
+
+/* ---------- 1. Шрифт ---------------------------------------------------------
+   TT Norms Pro Condensed (узкое начертание). Это ДВА ОБЫЧНЫХ файла:
+     • Normal — для всего текста
+     • Black  — для жирной строки в финале
+   Положите оба файла в папку assets/fonts рядом с index.html.
+   Пока файлов нет, используется узкий фолбэк Arial Narrow. */
+@font-face {
+  font-family: 'TT Norms Pro Trl Cnd';
+  src: url('assets/fonts/TT Norms Pro Trial Condensed Normal.woff2') format('woff2');
+  font-weight: 400;          /* это «Normal» — обычный текст */
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  /* Отдельное имя семейства — чтобы жирная строка гарантированно брала именно этот файл */
+  font-family: 'TT Norms Pro Trl Cnd Black';
+  src: url('assets/fonts/TT Norms Pro Trial Condensed Black.woff2') format('woff2');
+  font-weight: 900;          /* это «Black» — самый жирный */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- 2. Переменные ---------------------------------------------------- */
+:root {
+  /* Базовая единица макета. 1920 — ширина макета.
+     При желании зафиксировать пиксели: --u: 1px;  */
+  --u: calc(100vw / 1920);
+
+  /* Палитра из design.md */
+  --color-red:   #DA281C;
+  --color-black: #0E0000;
+
+  /* Небольшой отступ бутылки от верхнего и нижнего края экрана.
+     0px = как в макете 1920. Хочешь больше «воздуха» сверху/снизу — увеличь (напр. 30px). */
+  --bottle-gap: 0px;
+
+  /* Базовая высота кадра бутылки (масштаб 1.0 = это значение).
+     Берём МЕНЬШЕЕ из двух величин:
+       • размер по ширине (1080 * --u) — как масштабируется весь макет;
+       • высота окна минус отступы — чтобы бутылка НИКОГДА не вылезала за экран.
+     На 1920×1080 обе величины равны → как было. На 2560×1440 и любом другом
+     экране высота окна меньше «ширинного» размера, поэтому бутылка автоматически
+     вписывается в окно целиком и не обрезается снизу. */
+  --bottle-base: min(calc(1080 * var(--u)), calc(100vh - 2 * var(--bottle-gap)));
+
+  /* Единый стек шрифта. 'Arial Narrow' — узкий фолбэк, пока нет файлов TT Norms Pro. */
+  --font: 'TT Norms Pro Trl Cnd', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Маска-силуэт бутылки вшита прямо сюда (data-URI) — отдельный файл не нужен. */
+  --bottle-mask: url('data:image/png;base64,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');
+}
+
+/* ---------- 3. База ---------------------------------------------------------- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: auto; }
+
+body {
+  font-family: var(--font);
+  font-weight: 400;              /* Normal по умолчанию для всего сайта */
+  font-synthesis: none;          /* запрет «поддельной» жирности/курсива из чужого шрифта */
+  color: var(--color-black);
+  /* Подложку-градиент рисуем отдельным фиксированным слоем (body::before ниже),
+     а не фоном body: так он не перерисовывается на каждый скролл. */
+  background: transparent;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Статичная подложка-градиент: один фиксированный слой, рисуется один раз и при
+   скролле НЕ перерисовывается. Это убирает мерцание градиента, которое давал
+   background-attachment: fixed. Визуально результат тот же — градиент всегда
+   привязан к экрану и не двигается. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;                   /* позади всего контента */
+  background: linear-gradient(to bottom, #D8DADC, #FFFFFF);
+}
+
+img { display: block; max-width: none; }
+
+/* ---------- 4. Шапка (скроллится естественно, не фиксируется) ---------------- */
+.header {
+  position: absolute;            /* уезжает вверх вместе со страницей */
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 90;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(24 * var(--u)) calc(24 * var(--u));
+}
+.header nav { display: flex; gap: calc(34 * var(--u)); }
+.header a {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: calc(20 * var(--u));
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-black);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ---------- 5. Сцена бутылки (всегда фиксирована по центру) ------------------ */
+.bottle-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  pointer-events: none;          /* не перехватывает клики */
+}
+
+/* Контейнер кадров — ОДИН общий GPU-слой на все 120 кадров.
+   Благодаря собственному слою он лежит ПОВЕРХ «стекла» (у .glass свой слой
+   из-за backdrop-filter), поэтому бутылка остаётся чёткой, а блюр — за ней.
+   Один слой вместо 120 = нет переполнения видеопамяти и мерцания. */
+.bottle-frames {
+  grid-area: 1 / 1;              /* по центру, в той же ячейке грида, что и стекло */
+  display: grid;
+  place-items: center;
+  will-change: transform;
+}
+
+/* Стопка из 120 кадров — все наложены друг на друга внутри контейнера,
+   видимость рулится из JS. На самих кадрах слоёв НЕТ — слой один (на контейнере). */
+.bottle-frame {
+  grid-area: 1 / 1;              /* все кадры в одной ячейке грида = наложены */
+  height: var(--bottle-base);
+  width: auto;
+  opacity: 0;                    /* первый кадр включит JS */
+}
+
+/* Эффект «сквозь стекло»: размытие фона СТРОГО в форме бутылки.
+   Маска — силуэт бутылки (bottle_glass_mask.png), поэтому блюр не выходит за её края.
+   Если на слабой машине просядет FPS — отключите класс .glass-on на <body>. */
+.glass {
+  grid-area: 1 / 1;
+  width: var(--bottle-base);     /* совпадает по размеру с кадрами бутылки */
+  height: var(--bottle-base);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+  /* силуэт бутылки как маска — блюр только там, где стекло */
+  -webkit-mask-image: var(--bottle-mask);
+          mask-image: var(--bottle-mask);
+  -webkit-mask-size: 100% 100%;     mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;   mask-repeat: no-repeat;
+  -webkit-mask-position: center;    mask-position: center;
+}
+body.glass-on .glass {
+  /* сила размытия. Слишком сильно/слабо — меняйте только число blur(...) */
+  backdrop-filter: blur(6px) saturate(1.03);
+  -webkit-backdrop-filter: blur(6px) saturate(1.03);
+}
+
+/* ---------- 6. Общий контейнер контента ------------------------------------- */
+main { position: relative; }  /* убрали z-index: 0 — он «накрывал» финал и не давал ему лечь поверх бутылки. Текст-позиционирование (z-index 15) всё равно остаётся ЗА бутылкой (z-index 20). */
+
+/* Утилита: блок контента в координатах макета 1920×1080 */
+.screen {
+  position: relative;
+  width: 100vw;
+  height: calc(1080 * var(--u));   /* 1 «экран» */
+}
+
+/* ---------- 7. HERO ---------------------------------------------------------- */
+/* Высокая зона — пока её скроллим, hero-inner «прилипает» (sticky),
+   а группа фона плавно растворяется (управляется из JS). */
+.hero { height: 260vh; position: relative; }
+.hero-inner {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Группа, которая растворяется (фото + тексты + wordmark). Бутылка — отдельно. */
+.hero-bg {
+  position: absolute;
+  /* Композиция hero = «холст» 1920×1080 макета, отмасштабированный ПО ШИРИНЕ
+     (через --u) и отцентрованный в окне. Центрируем через left/top, а НЕ через
+     transform, — чтобы GSAP мог свободно анимировать transform/scale этого же
+     элемента (растворение hero) без конфликта.
+     На экране 1920×1080 это буквально inset:0 — на референсе ничего не меняется.
+     На других пропорциях (16:10, вертикальный телефон) композиция остаётся
+     цельной и отцентрованной по бутылке, а не растягивается по высоте окна. */
+  width:  calc(1920 * var(--u));
+  height: calc(1080 * var(--u));
+  left: calc(50% - 960 * var(--u));
+  top:  calc(50% - 540 * var(--u));
+  will-change: transform, opacity, filter;
+  transform: translate3d(0,0,0);
+}
+
+.hero-photo { position: absolute; object-fit: cover; }
+.hero-photo--left  { left: calc(115 * var(--u));  top: calc(167 * var(--u)); width: calc(415 * var(--u)); height: calc(320 * var(--u)); }
+/* правое фото 400×480, прижато к правому краю (отступ 115px, как у левого) -> left = 1920-115-400 = 1405 */
+.hero-photo--right { left: calc(1405 * var(--u)); top: calc(264 * var(--u)); width: calc(400 * var(--u)); height: calc(480 * var(--u)); }
+
+/* Каждая строка hero — отдельный позиционированный элемент (точная «лесенка» из макета).
+   Координаты left/top — в пикселях макета 1920×1080 (через --u). */
+.hero-line {
+  position: absolute;
+  white-space: nowrap;
+  font-weight: 400;
+  font-size: calc(24 * var(--u));
+  line-height: 110%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+/* ПРАВЫЙ блок. r2 («минеральная») по верху фото справа (top: 264 — как у .hero-photo--right). Шаг строки 27px. */
+.hero-line.r1 { left: calc(1107 * var(--u)); top: calc(237 * var(--u)); }
+.hero-line.r2 { left: calc(1171 * var(--u)); top: calc(264 * var(--u)); }
+.hero-line.r3 { left: calc(1122 * var(--u)); top: calc(291 * var(--u)); }
+.hero-line.r4 { left: calc(1092 * var(--u)); top: calc(318 * var(--u)); }
+/* ЛЕВЫЙ блок. Координаты строго из макета. */
+.hero-line.l1 { left: calc(627 * var(--u)); top: calc(456 * var(--u)); }
+.hero-line.l2 { left: calc(762 * var(--u)); top: calc(483 * var(--u)); }
+.hero-line.l3 { left: calc(674 * var(--u)); top: calc(510 * var(--u)); }
+.hero-line.l4 { left: calc(618 * var(--u)); top: calc(537 * var(--u)); }
+
+/* Крупный красный wordmark «sence» внизу, частично за бутылкой и обрезан низом */
+.hero-wordmark {
+  position: absolute;
+  left: 50%;
+  bottom: calc(20 * var(--u));        /* отступ 20px от низа экрана, логотип не обрезается */
+  transform: translateX(-50%);
+  width: calc(1760 * var(--u));
+  height: auto;
+}
+
+/* ---------- 8. Зона вращения + тексты позиционирования ----------------------- */
+.rotate { height: 90vh; position: relative; }  /* было 200vh — подтянули преимущества выше под укороченный слоган */
+
+.pos-text {
+  position: absolute;
+  font-weight: 400;
+  font-size: calc(24 * var(--u));
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-black);
+  opacity: 0;                       /* появление — из JS */
+  will-change: opacity, filter, transform;
+}
+/* Текст-позиционирование: ЗАФИКСИРОВАН по центру экрана (раньше скроллился).
+   Появление/исчезновение — по скроллу из JS (blur + прозрачность). */
+.pos-text--a {
+  position: fixed;            /* было absolute (двигался со страницей) — теперь прибит к экрану */
+  /* Холст 1920×1080, масштабируется по ширине и центрируется в окне (как hero-bg).
+     На 1920×1080 это ровно inset:0; на других пропорциях блок остаётся цельным
+     и отцентрованным по бутылке. Сами фразы .pt позиционируются внутри в px макета. */
+  inset: auto;
+  width:  calc(1920 * var(--u));
+  height: calc(1080 * var(--u));
+  left: calc(50% - 960 * var(--u));
+  top:  calc(50% - 540 * var(--u));
+  z-index: 15;                /* поверх фона; бутылка (z-index 20) остаётся сверху */
+  pointer-events: none;
+  opacity: 1;                 /* сам контейнер всегда видим: появлением рулят .pt по очереди */
+}
+/* Два текстовых блока по бокам от бутылки; вертикаль — по центру экрана.
+   left блока = X самой ЛЕВОЙ строки блока (остальные строки сдвигаются вправо).
+   opacity: 0 — стартовое состояние, каждый блок проявляет JS по очереди. */
+.pos-text--a .pt {
+  position: absolute;
+  opacity: 0;
+  will-change: opacity, filter;
+}
+.pos-text--a .pt--right { left: calc(1180 * var(--u)); top: calc(342 * var(--u)); }
+.pos-text--a .pt--left  { left: calc(436  * var(--u)); top: calc(622 * var(--u)); }
+
+/* Каждая строка — отдельная, со своим горизонтальным сдвигом (лесенка из макета).
+   НЕТ выравнивания по левому/правому флагу: позицию строки задаёт только margin-left. */
+.pos-text--a .ln {
+  display: block;
+  white-space: nowrap;
+  line-height: 1.1;            /* шаг строк = как в макете (110%) */
+}
+/* Сдвиги строк, px макета 1920 (измерено по Макет.pdf, стр.6).
+   Хочешь подвинуть строку — меняй её число здесь. */
+.pos-text--a .pt--right .ln:nth-child(1) { margin-left: calc(66  * var(--u)); } /* вода для урбанистов */
+.pos-text--a .pt--right .ln:nth-child(2) { margin-left: calc(115 * var(--u)); } /* которые выбирают простые */
+.pos-text--a .pt--right .ln:nth-child(3) { margin-left: 0;                    } /* и осмысленные вещи (самая левая) */
+.pos-text--a .pt--right .ln:nth-child(4) { margin-left: calc(99  * var(--u)); } /* соответствующие */
+.pos-text--a .pt--right .ln:nth-child(5) { margin-left: calc(46  * var(--u)); } /* их лайфстайлу */
+.pos-text--a .pt--left  .ln:nth-child(1) { margin-left: 0;                    } /* зная, что всегда (самая левая) */
+.pos-text--a .pt--left  .ln:nth-child(2) { margin-left: calc(156 * var(--u)); } /* получают */
+.pos-text--a .pt--left  .ln:nth-child(3) { margin-left: calc(107 * var(--u)); } /* гарантированный */
+.pos-text--a .pt--left  .ln:nth-child(4) { margin-left: calc(44  * var(--u)); } /* вкус и качество */
+
+/* ---------- 9. Слоган (появляется, держится, уходит) ------------------------- */
+.slogan { height: 60vh; position: relative; }  /* было 300vh — секция пустая (текст удалён), оставляем минимум для тайминга */
+.slogan-inner {
+  position: sticky; top: 0;
+  height: 100vh; width: 100vw;
+  display: grid; place-items: center;
+  opacity: 0;                       /* fade in/out из JS */
+  will-change: opacity, filter;
+}
+.slogan-inner p {
+  font-weight: 400;
+  font-size: calc(40 * var(--u));
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-black);
+  max-width: calc(900 * var(--u));
+}
+
+/* ---------- 10. Преимущества 01–05 (обычный скролл) -------------------------- */
+.benefits { position: relative; }
+
+.benefit {
+  position: relative;
+  width: 100vw;
+  height: 130vh;
+}
+.benefit-photo { position: absolute; top: calc(166 * var(--u)); object-fit: cover; }
+
+/* ------- Размеры фото и привязка к сетке -----------------------------------
+   Все фото одинакового размера 521×620.
+   Левые фото — на 166px от левого края экрана (2-я колонка).
+   Правые фото — на 166px от правого края экрана:
+     left = 1920 - 166 - 521 = 1233px. */
+.benefit-photo { width: calc(521 * var(--u)); height: calc(620 * var(--u)); }
+
+.benefit--left  .benefit-photo { left: calc(166 * var(--u)); }
+.benefit--right .benefit-photo { left: calc(1233 * var(--u)); }
+
+.benefit-caption {
+  position: absolute;
+  /* ПОД фото: верх фото 166 + высота фото 620 + отступ 40 = 826 */
+  top: calc(826 * var(--u));
+  display: flex;
+  gap: calc(66 * var(--u));   /* номер (40) + зазор (66) = текст начинается на 106px правее номера */
+  font-weight: 400;
+  font-size: calc(24 * var(--u));
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+/* Левый край блока (цифра) выровнен по левому краю фото над ним */
+.benefit--left  .benefit-caption { left: calc(166 * var(--u)); }   /* = левый край левых фото */
+.benefit--right .benefit-caption { left: calc(1233 * var(--u)); }  /* = левый край правых фото */
+.benefit-caption .num { min-width: calc(40 * var(--u)); }
+
+/* Текст — колонкой; каждая строка (.ln) со своим сдвигом = «лесенка» из макета */
+.benefit-caption .txt { display: flex; flex-direction: column; align-items: flex-start; }
+.benefit-caption .ln { white-space: nowrap; }
+
+/* Индивидуальные сдвиги строк (лесенка). База = левый край текста, значения сняты с макета.
+   Строки без правила стоят на базовой линии (сдвиг 0). */
+/* 02 — чистый / нейтральный вкус / без посторонних / оттенков */
+.benefit:nth-of-type(2) .ln:nth-child(1) { margin-left: calc(30 * var(--u)); }
+.benefit:nth-of-type(2) .ln:nth-child(2) { margin-left: calc(81 * var(--u)); }
+.benefit:nth-of-type(2) .ln:nth-child(3) { margin-left: calc(50 * var(--u)); }
+/* 03 — умеренная / минерализация / без перегрузки / солями */
+.benefit:nth-of-type(3) .ln:nth-child(1) { margin-left: calc(105 * var(--u)); }
+.benefit:nth-of-type(3) .ln:nth-child(3) { margin-left: calc(63 * var(--u)); }
+.benefit:nth-of-type(3) .ln:nth-child(4) { margin-left: calc(160 * var(--u)); }
+/* 04 — вода для того, / чтобы снова ощутить / вкус жизни */
+.benefit:nth-of-type(4) .ln:nth-child(2) { margin-left: calc(54 * var(--u)); }
+.benefit:nth-of-type(4) .ln:nth-child(3) { margin-left: calc(21 * var(--u)); }
+/* 05 — выпить при / первых признаках / рутины */
+.benefit:nth-of-type(5) .ln:nth-child(2) { margin-left: calc(53 * var(--u)); }
+.benefit:nth-of-type(5) .ln:nth-child(3) { margin-left: calc(16 * var(--u)); }
+
+/* ---------- 11. Растворение бутылки ----------------------------------------- */
+.dissolve { height: 20vh; }  /* было 150vh — растворение теперь короткое, подтянули низ выше, чтобы не было пустоты */
+
+/* ---------- 12. Финал (обычный сайт, без фиксаций) --------------------------- */
+/* Финал лежит ПОВЕРХ бутылки (z-index 25 > 20): при скролле он наезжает на неё,
+   и бутылка «уходит» за белый слой снизу вверх. Фон сплошной белый — слоган,
+   форма и футер на белом, фиксированный градиент за ними больше не виден. */
+.finale { position: relative; z-index: 25; background: #FFFFFF; }
+
+/* Градиентная полоса по ВЕРХНЕЙ кромке финала: прозрачный (сверху) → белый (снизу).
+   Это и есть «слой-градиент из Figma», за который уходит бутылка. Она скрывается
+   мягко снизу вверх, без резкой границы. Высоту перехода (560) можно менять:
+   больше число = длиннее и мягче растворение в белый. */
+.finale::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 100%;                 /* полоса сразу НАД финалом (в зоне .dissolve) */
+  height: calc(560 * var(--u));
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #FFFFFF);
+  pointer-events: none;
+}
+
+.finale-slogan {
+  text-align: center;
+  padding-top: calc(100 * var(--u));
+  color: var(--color-red);
+  text-transform: uppercase;
+  line-height: 1.05;   /* безразмерное: каждая строка считает интервал от своего кегля */
+}
+.finale-slogan .b {           /* жирная часть — единственное место с Black */
+  font-family: 'TT Norms Pro Trl Cnd Black', 'Arial Narrow', sans-serif;
+  font-weight: 900;
+  font-size: calc(108 * var(--u));
+  letter-spacing: 0;
+}
+.finale-slogan .t {           /* тонкая часть (доступно только Normal) */
+  font-weight: 400;
+  font-size: calc(76 * var(--u));
+  letter-spacing: -0.02em;
+}
+.finale-slogan .row { display: block; }
+
+/* Форма подписки */
+.subscribe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: calc(120 * var(--u));
+}
+.subscribe-row {
+  display: flex;
+  align-items: center;
+  gap: calc(16 * var(--u));
+}
+.subscribe input {
+  width: calc(360 * var(--u));
+  border: none;
+  border-bottom: 1px solid var(--color-black);
+  background: transparent;
+  padding: calc(8 * var(--u)) 0;
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: calc(24 * var(--u));
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+.subscribe input::placeholder { color: rgba(14, 0, 0, 0.2); text-transform: uppercase; }
+.subscribe input:focus { outline: none; }
+.subscribe button {
+  width: calc(46 * var(--u));
+  height: calc(46 * var(--u));
+  border: none;
+  border-radius: calc(10 * var(--u));
+  background: var(--color-black);
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: background-color .3s ease;      /* плавная смена цвета на ховере */
+}
+.subscribe button:hover { background: var(--color-red); }   /* чёрный → фирменный красный */
+.subscribe button .arrow-ic {
+  width: calc(40 * var(--u));
+  height: calc(40 * var(--u));
+  display: block;
+}
+.subscribe-caption {
+  margin-top: calc(22 * var(--u));
+  max-width: calc(440 * var(--u));
+  text-align: center;
+  font-weight: 400;
+  font-size: calc(18 * var(--u));
+  line-height: 110%;
+  color: var(--color-black);
+}
+
+/* Большой wordmark внизу */
+.finale-wordmark {
+  width: calc(100% - 48 * var(--u));   /* было 20 → стало 48 (24+24) */
+  margin-inline: calc(24 * var(--u));  /* было 10 → стало 24 */
+  margin-top: calc(120 * var(--u));
+  display: block;
+}
+
+/* Футер */
+.footer {
+  /* боковые отступы = 10px, совпадают с полями логотипа */
+  padding: calc(20 * var(--u)) calc(24 * var(--u)) calc(28 * var(--u));  /* было 10 → стало 24 */
+}
+
+/* строка с текстовыми фреймами: ширина по тексту, промежутки распределяются сами */
+/* контейнер: две строки одна под другой, между ними 16px */
+.footer-grid {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--u));
+}
+
+/* каждая строка: разделы по ширине текста, промежутки распределяются сами */
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.footer a, .footer span {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: calc(20 * var(--u));
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-black);
+  text-decoration: none;
+  white-space: nowrap;   /* текст внутри фрейма не переносится */
+}
+
+/* ---------- 13. Загрузчик ассетов (короткая заставка) ----------------------- */
+.preloader {
+  position: fixed; inset: 0; z-index: 200;
+  background: linear-gradient(to bottom, #D8DADC, #FFFFFF);
+  display: grid; place-items: center;
+  transition: opacity .6s ease;
+}
+.preloader.hidden { opacity: 0; pointer-events: none; }
+/* Полоса загрузки скрыта — раньше мелькала красным в центре при загрузке.
+   Элемент оставлен в разметке: на #preloaderBar ссылается script.js. */
+.preloader .bar {
+  display: none;
+  width: calc(220 * var(--u)); height: 2px; background: rgba(0,0,0,.12); overflow: hidden;
+}
+.preloader .bar i { display: block; height: 100%; width: 0; background: var(--color-red); }
