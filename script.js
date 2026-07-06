@@ -15,7 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
 /* ----------------------------- CONFIG --------------------------------------
    Здесь можно подстраивать поведение анимации, ничего не ища по всему файлу. */
 const CONFIG = {
-  FRAMES: 120,           // количество кадров вращения (файлы assets/bottle/bottle_01..120.png)
+  FRAMES: 120,           // количество кадров вращения (файлы assets/bottle/Bottle_01..120.png)
 
   // HERO: бутылка крупная (видно горлышко) -> уменьшается до «высоты 1080px»
   HERO_SCALE_START: 1.5,   // стартовый масштаб (крышка на 50px от верха, видно начало широкой части)
@@ -72,14 +72,14 @@ const glass = document.getElementById('glass');
 const framesHost = document.getElementById('bottleFrames');
 
 /* Создаём 120 кадров и наслаиваем их в сцене (поверх «стекла»).
-   Имена файлов: assets/bottle/bottle_01.png ... bottle_120.png */
+   Имена файлов: assets/bottle/Bottle_01.png ... Bottle_120.png */
 function buildFrames(host, count) {
   const arr = [];
   for (let i = 1; i <= count; i++) {
     const img = document.createElement('img');
     img.className = 'bottle-frame';
     img.alt = '';
-    img.src = 'assets/bottle/bottle_' + String(i).padStart(2, '0') + '.png';
+    img.src = 'assets/bottle/Bottle_' + String(i).padStart(2, '0') + '.png';
     host.appendChild(img);
     arr.push(img);
   }
